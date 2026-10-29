@@ -1,0 +1,9 @@
+.app-shell { min-height: 100vh; text-align: left; }
+.app-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 1px solid var(--border); }
+.app-header nav { display: flex; gap: 1rem; }
+.app-header a { color: var(--text); text-decoration: none; }
+.app-header a.active { color: var(--accent); font-weight: 600; }
+.brand { color: var(--text-h) !important; font-weight: 700; }
+.app-content { padding: 2rem; }
+.page { max-width: 60rem; margin: 0 auto; }
+.page a { color: var(--accent); }
