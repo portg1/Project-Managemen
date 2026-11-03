@@ -14,9 +14,9 @@ export default function AppShell({ children }) {
       <SidebarInset className="min-h-0 min-w-0">
         <AppHeader />
 
-        <main className="min-h-0 flex-1 overflow-y-auto p-4">
+        <div className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4">
           {children}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

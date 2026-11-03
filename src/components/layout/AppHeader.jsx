@@ -2,10 +2,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-import { Separator } from "@/components/ui/separator"
 import { useLocation } from "react-router"
-
-// Import your theme toggle when implemented.
+import ThemeToggle from "./ThemeToggle"
 
 function getPageTitle(pathname) {
   if (pathname === "/") return "Dashboard"
@@ -30,6 +28,9 @@ export default function AppHeader() {
         {pageTitle}
       </h1>
 
+      <div className="ml-auto">
+        <ThemeToggle />
+      </div>
     </header>
   )
 }
