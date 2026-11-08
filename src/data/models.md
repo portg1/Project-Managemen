@@ -6,39 +6,39 @@ state.
 
 ## Project
 
-| Property | Type | Description |
-| --- | --- | --- |
-| `id` | string | Unique project identifier. |
-| `name` | string | Project name. |
-| `description` | string | Short description of the project. |
-| `status` | string | One of `planned`, `active`, `on_hold`, or `completed`. |
-| `startDate` | string | Project start date in `YYYY-MM-DD` format. |
-| `dueDate` | string | Project due date in `YYYY-MM-DD` format. |
-| `color` | string (optional) | UI accent color. |
-| `tag` | string (optional) | Short categorization label. |
+| Property      | Type              | Description                                            |
+| ------------- | ----------------- | ------------------------------------------------------ |
+| `id`          | string            | Unique project identifier.                             |
+| `name`        | string            | Project name.                                          |
+| `description` | string            | Short description of the project.                      |
+| `status`      | string            | One of `planned`, `active`, `on_hold`, or `completed`. |
+| `startDate`   | string            | Project start date in `YYYY-MM-DD` format.             |
+| `dueDate`     | string            | Project due date in `YYYY-MM-DD` format.               |
+| `color`       | string (optional) | UI accent color.                                       |
+| `tag`         | string (optional) | Short categorization label.                            |
 
 ## Task
 
-| Property | Type | Description |
-| --- | --- | --- |
-| `id` | string | Unique task identifier. |
-| `title` | string | Concise task title. |
-| `description` | string | Details and expected outcome. |
-| `projectId` | string | ID of the related project. |
-| `assigneeId` | string | ID of the responsible member. |
-| `priority` | `Low \| Medium \| High` | Urgency of the task. |
-| `status` | `todo \| in_progress \| done` | Current workflow state. |
-| `dueDate` | string | Task deadline in `YYYY-MM-DD` format. |
-| `createdAt` | string | Creation timestamp in ISO 8601 format. |
+| Property      | Type                          | Description                            |
+| ------------- | ----------------------------- | -------------------------------------- |
+| `id`          | string                        | Unique task identifier.                |
+| `title`       | string                        | Concise task title.                    |
+| `description` | string                        | Details and expected outcome.          |
+| `projectId`   | string                        | ID of the related project.             |
+| `assigneeId`  | string                        | ID of the responsible member.          |
+| `priority`    | `Low \| Medium \| High`       | Urgency of the task.                   |
+| `status`      | `todo \| in_progress \| done` | Current workflow state.                |
+| `dueDate`     | string                        | Task deadline in `YYYY-MM-DD` format.  |
+| `createdAt`   | string                        | Creation timestamp in ISO 8601 format. |
 
 ## Member
 
-| Property | Type | Description |
-| --- | --- | --- |
-| `id` | string | Unique member identifier. |
-| `name` | string | Member's display name. |
+| Property   | Type   | Description                |
+| ---------- | ------ | -------------------------- |
+| `id`       | string | Unique member identifier.  |
+| `name`     | string | Member's display name.     |
 | `jobTitle` | string | Member's role on the team. |
-| `avatar` | string | Initials or an avatar URL. |
+| `avatar`   | string | Initials or an avatar URL. |
 
 ## Relationships and conventions
 
