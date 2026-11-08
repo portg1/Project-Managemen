@@ -14,9 +14,27 @@ import {
 	SORT_FIELDS,
 } from "@/services/projects/projectFilterService.js";
 
+// The page only needs to know about filters through this component.
+export {
+	DEFAULT_FILTERS,
+	getProjectsForList,
+} from "@/services/projects/projectFilterService.js";
+
+export function readProjectFilters(params) {
+	const status = params.get("status");
+	const sortBy = params.get("sortBy");
+
+	return {
+		search: params.get("q") || "",
+		status: Object.hasOwn(PROJECT_STATUSES, status) ? status : "all",
+		overdue: params.get("overdue") === "true",
+		sortBy: Object.hasOwn(SORT_FIELDS, sortBy) ? sortBy : "name",
+		sortOrder: params.get("sortOrder") === "desc" ? "desc" : "asc",
+	};
+}
+
 export default function ProjectFilters({
 	filters,
-	search,
 	hasFilters,
 	onSearchChange,
 	onFilterChange,
@@ -31,7 +49,7 @@ export default function ProjectFilters({
 						aria-label="Search projects"
 						className="pl-8"
 						placeholder="Search projects..."
-						value={search}
+						value={filters.search}
 						onChange={onSearchChange}
 					/>
 				</div>

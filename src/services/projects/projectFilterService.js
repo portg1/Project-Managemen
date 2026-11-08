@@ -15,6 +15,14 @@ export const SORT_FIELDS = {
 	progress: "Progress",
 };
 
+export const DEFAULT_FILTERS = {
+	search: "",
+	status: "all",
+	overdue: false,
+	sortBy: "name",
+	sortOrder: "asc",
+};
+
 function getToday() {
 	const date = new Date();
 	const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -31,19 +39,9 @@ export function getProjectsForList(projects, tasks, filters) {
 			...project,
 			progress: getProjectProgress(project.id, tasks),
 		}))
-		.filter((project) => {
-			const text = `${project.name} ${project.description}`.toLowerCase();
-			return !search || text.includes(search);
-		})
-		.filter(
-			(project) =>
-				filters.status === "all" || project.status === filters.status,
-		)
-		.filter(
-			(project) =>
-				!filters.overdue ||
-				(project.dueDate < today && project.status !== "completed"),
-		)
+		.filter((project) => matchesSearch(project, search))
+		.filter((project) => matchesStatus(project, filters.status))
+		.filter((project) => matchesOverdue(project, filters.overdue, today))
 		.sort((first, second) => {
 			const firstValue =
 				filters.sortBy === "progress" ? first.progress : first[filters.sortBy];
@@ -57,4 +55,18 @@ export function getProjectsForList(projects, tasks, filters) {
 					: String(firstValue).localeCompare(String(secondValue));
 			return filters.sortOrder === "desc" ? -result : result;
 		});
+}
+
+function matchesSearch(project, search) {
+	if (!search) return true;
+	const text = `${project.name} ${project.description}`.toLowerCase();
+	return text.includes(search);
+}
+
+function matchesStatus(project, status) {
+	return status === "all" || project.status === status;
+}
+
+function matchesOverdue(project, overdue, today) {
+	return !overdue || (project.dueDate < today && project.status !== "completed");
 }
