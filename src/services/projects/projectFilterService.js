@@ -27,33 +27,19 @@ export function getProjectsForList(projects, tasks, filters) {
   const today = getToday()
 
   return projects
-    .map((project) => ({
-      ...project,
-      progress: getProjectProgress(project.id, tasks),
-    }))
+    .map((project) => ({ ...project, progress: getProjectProgress(project.id, tasks) }))
     .filter((project) => {
       const text = `${project.name} ${project.description}`.toLowerCase()
       return !search || text.includes(search)
     })
-    .filter((project) => (
-      filters.status === 'all' || project.status === filters.status
-    ))
-    .filter((project) => (
-      !filters.overdue
-      || (project.dueDate < today && project.status !== 'completed')
-    ))
+    .filter((project) => filters.status === 'all' || project.status === filters.status)
+    .filter((project) => !filters.overdue || (project.dueDate < today && project.status !== 'completed'))
     .sort((first, second) => {
-      const firstValue = filters.sortBy === 'progress'
-        ? first.progress
-        : first[filters.sortBy]
-      const secondValue = filters.sortBy === 'progress'
-        ? second.progress
-        : second[filters.sortBy]
-
+      const firstValue = filters.sortBy === 'progress' ? first.progress : first[filters.sortBy]
+      const secondValue = filters.sortBy === 'progress' ? second.progress : second[filters.sortBy]
       const result = typeof firstValue === 'number'
         ? firstValue - secondValue
         : String(firstValue).localeCompare(String(secondValue))
-
       return filters.sortOrder === 'desc' ? -result : result
     })
 }
