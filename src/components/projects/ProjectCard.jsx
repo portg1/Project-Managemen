@@ -1,5 +1,7 @@
 import { Link } from 'react-router'
 import { CalendarDays } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PROJECT_STATUSES } from '@/services/projectListService.js'
@@ -9,10 +11,10 @@ function formatDate(value) {
     .format(new Date(`${value}T12:00:00`))
 }
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, onEdit, onDelete }) {
   return (
-    <Link to={`/projects/${project.id}`} className="block h-full">
-      <Card className="h-full hover:shadow-md">
+    <Card className="h-full hover:shadow-md">
+      <Link to={`/projects/${project.id}`} className="block">
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
             <CardTitle>{project.name}</CardTitle>
@@ -24,6 +26,7 @@ export default function ProjectCard({ project }) {
             {project.description}
           </p>
         </CardHeader>
+      </Link>
 
         <CardContent className="space-y-4">
           <div className="grid grid-cols-2 gap-3 text-xs">
@@ -62,8 +65,11 @@ export default function ProjectCard({ project }) {
               />
             </div>
           </div>
+          <div className="flex justify-end gap-2 border-t pt-3">
+            <Button type="button" variant="outline" size="sm" onClick={() => onEdit?.(project)}><Pencil /> Edit</Button>
+            <Button type="button" variant="danger" size="sm" onClick={() => onDelete?.(project)}><Trash2 /> Delete</Button>
+          </div>
         </CardContent>
       </Card>
-    </Link>
   )
 }
