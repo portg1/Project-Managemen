@@ -66,6 +66,7 @@ export const tasks = [
   task('task-23', 'Add contact form validation', 'Validate support requests and show useful inline errors.', 'project-5', 'member-2', 'Medium', 'in_progress', 9, 5),
   task('task-24', 'Usability test portal', 'Test the primary support journeys with five participants.', 'project-5', 'member-5', 'Medium', 'todo', 16, 3),
   task('task-25', 'Prepare launch metrics', 'Define adoption and resolution metrics for the portal launch.', 'project-5', 'member-6', 'Low', 'todo', 22, 1),
+
 ]
 
 export function getProjectProgress(projectId, projectTasks) {

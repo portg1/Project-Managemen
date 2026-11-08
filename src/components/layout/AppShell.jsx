@@ -18,6 +18,11 @@ export default function AppShell({ children }) {
           {children}
         </div>
       </SidebarInset>
+
+      
     </SidebarProvider>
+
+    
+    
   )
 }
