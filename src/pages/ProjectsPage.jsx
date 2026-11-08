@@ -11,8 +11,8 @@ import ProjectCard from '@/components/projects/ProjectCard.jsx'
 import ProjectFormDialog from '@/components/projects/ProjectFormDialog.jsx'
 import { toast } from '@/components/ui/sonner'
 import { useProjectStore } from '@/store/projectStore.js'
-import { createProject, deleteProject, updateProject } from '@/services/projectservice/projectcrudeservice.js'
-import { getProjectsForList, PROJECT_STATUSES, SORT_FIELDS } from '@/services/projectservice/projectfilterservice.js'
+import { createProject, deleteProject, updateProject } from '@/services/projects/projectCrudService.js'
+import { getProjectsForList, PROJECT_STATUSES, SORT_FIELDS } from '@/services/projects/projectFilterService.js'
 
 function readFilters(params) {
   const status = params.get('status')

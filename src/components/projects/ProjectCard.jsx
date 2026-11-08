@@ -4,7 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { PROJECT_STATUSES } from '@/services/projectservice/projectfilterservice.js'
+import { PROJECT_STATUSES } from '@/services/projects/projectFilterService.js'
 
 function formatDate(value) {
   return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' })
