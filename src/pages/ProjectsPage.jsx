@@ -11,7 +11,8 @@ import ProjectCard from '@/components/projects/ProjectCard.jsx'
 import ProjectFormDialog from '@/components/projects/ProjectFormDialog.jsx'
 import { toast } from '@/components/ui/sonner'
 import { useProjectStore } from '@/store/projectStore.js'
-import { getProjectsForList, PROJECT_STATUSES, SORT_FIELDS } from '@/services/projectListService.js'
+import { createProject, deleteProject, updateProject } from '@/services/projectservice/projectcrudeservice.js'
+import { getProjectsForList, PROJECT_STATUSES, SORT_FIELDS } from '@/services/projectservice/projectfilterservice.js'
 
 function readFilters(params) {
   const status = params.get('status')
@@ -35,9 +36,6 @@ export default function ProjectsPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [editingProject, setEditingProject] = useState(null)
   const [deletingProject, setDeletingProject] = useState(null)
-  const addProject = useProjectStore((state) => state.addProject)
-  const updateProject = useProjectStore((state) => state.updateProject)
-  const deleteProject = useProjectStore((state) => state.deleteProject)
 
   // Keep the input correct when browser back/forward changes the URL.
   // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -80,7 +78,7 @@ export default function ProjectsPage() {
   function saveProject(values) {
     const successful = editingProject
       ? updateProject(editingProject.id, values)
-      : addProject({ ...values, id: crypto.randomUUID(), color: '#4f46e5', tag: 'General' })
+      : createProject(values)
     if (!successful) { toast.error(`Could not ${editingProject ? 'update' : 'create'} project.`); return }
     toast.success(`Project ${editingProject ? 'updated' : 'created'} successfully.`)
     setFormOpen(false)
