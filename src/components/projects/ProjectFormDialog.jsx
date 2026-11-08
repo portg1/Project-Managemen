@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { DatePicker } from '@/components/ui/date-picker'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -14,39 +15,17 @@ const DEFAULT_PROJECT = {
   dueDate: '',
 }
 
-function validate(values) {
-  const errors = {}
-  if (!values.name.trim()) errors.name = 'Name is required.'
-  if (values.startDate && values.dueDate && values.dueDate < values.startDate) {
-    errors.dueDate = 'Due date must not precede the start date.'
-  }
-  return errors
-}
-
 export default function ProjectFormDialog({ open, onOpenChange, project, onSubmit }) {
-  const [values, setValues] = useState(DEFAULT_PROJECT)
-  const [errors, setErrors] = useState({})
   const editing = Boolean(project)
+  const { register, control, handleSubmit, reset, formState: { errors } } = useForm({
+    defaultValues: DEFAULT_PROJECT,
+  })
 
-  // Reset the draft when the dialog opens or the selected project changes.
   useEffect(() => {
-    if (open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setValues(project ? { ...DEFAULT_PROJECT, ...project } : DEFAULT_PROJECT)
-      setErrors({})
-    }
-  }, [open, project])
+    if (open) reset(project ? { ...DEFAULT_PROJECT, ...project } : DEFAULT_PROJECT)
+  }, [open, project, reset])
 
-  function updateField(field, value) {
-    setValues((current) => ({ ...current, [field]: value }))
-    setErrors((current) => ({ ...current, [field]: undefined }))
-  }
-
-  function submit(event) {
-    event.preventDefault()
-    const nextErrors = validate(values)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
+  function submit(values) {
     onSubmit({ ...values, name: values.name.trim(), description: values.description.trim() })
   }
 
@@ -57,26 +36,51 @@ export default function ProjectFormDialog({ open, onOpenChange, project, onSubmi
           <DialogTitle>{editing ? 'Edit project' : 'Create project'}</DialogTitle>
           <DialogDescription>{editing ? 'Update the project details.' : 'Add a project to start tracking its work.'}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={submit} className="grid gap-4">
+        <form onSubmit={handleSubmit(submit)} className="grid gap-4">
           <div className="grid gap-1.5">
             <label htmlFor="project-name" className="text-sm font-medium">Name</label>
-            <Input id="project-name" value={values.name} onChange={(event) => updateField('name', event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? 'project-name-error' : undefined} />
-            {errors.name && <p id="project-name-error" role="alert" className="text-sm text-destructive">{errors.name}</p>}
+            <Input
+              id="project-name"
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={errors.name ? 'project-name-error' : undefined}
+              {...register('name', {
+                required: 'Name is required.',
+                validate: (value) => value.trim().length > 0 || 'Name is required.',
+              })}
+            />
+            {errors.name && <p id="project-name-error" role="alert" className="text-sm text-destructive">{errors.name.message}</p>}
           </div>
           <div className="grid gap-1.5">
             <label htmlFor="project-description" className="text-sm font-medium">Description</label>
-            <Textarea id="project-description" value={values.description} onChange={(event) => updateField('description', event.target.value)} />
+            <Textarea id="project-description" {...register('description')} />
           </div>
           <div className="grid gap-1.5">
             <label htmlFor="project-status" className="text-sm font-medium">Status</label>
-            <Select value={values.status} onValueChange={(value) => updateField('status', value)}>
-              <SelectTrigger id="project-status"><SelectValue /></SelectTrigger>
-              <SelectContent><SelectItem value="planned">Planned</SelectItem><SelectItem value="active">Active</SelectItem><SelectItem value="on_hold">On Hold</SelectItem><SelectItem value="completed">Completed</SelectItem></SelectContent>
-            </Select>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger id="project-status"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectItem value="planned">Planned</SelectItem><SelectItem value="active">Active</SelectItem><SelectItem value="on_hold">On Hold</SelectItem><SelectItem value="completed">Completed</SelectItem></SelectContent>
+                </Select>
+              )}
+            />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <DatePicker label="Start date" value={values.startDate} onChange={(event) => updateField('startDate', event.target.value)} />
-            <DatePicker label="Due date" value={values.dueDate} onChange={(event) => updateField('dueDate', event.target.value)} error={errors.dueDate} />
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => <DatePicker label="Start date" value={field.value} onChange={field.onChange} />}
+            />
+            <Controller
+              name="dueDate"
+              control={control}
+              rules={{
+                validate: (dueDate, values) => !dueDate || !values.startDate || dueDate >= values.startDate || 'Due date must not precede the start date.',
+              }}
+              render={({ field }) => <DatePicker label="Due date" value={field.value} onChange={field.onChange} error={errors.dueDate?.message} />}
+            />
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
