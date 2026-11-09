@@ -1,4 +1,4 @@
-import { CalendarDays, Plus } from "lucide-react";
+import { CalendarDays, Pencil, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -25,7 +25,13 @@ function formatDate(value) {
 	);
 }
 
-export default function ProjectTasksTable({ projectName, tasks, members }) {
+export default function ProjectTasksTable({
+	projectName,
+	tasks,
+	members,
+	onAdd,
+	onEdit,
+}) {
 	const counts = {
 		todo: tasks.filter((task) => task.status === "todo").length,
 		in_progress: tasks.filter((task) => task.status === "in_progress").length,
@@ -41,11 +47,7 @@ export default function ProjectTasksTable({ projectName, tasks, members }) {
 						Work currently assigned to this project.
 					</p>
 				</div>
-				<Button
-					type="button"
-					disabled
-					title="TaskFormDialog from issue #17 is not available yet"
-				>
+				<Button type="button" onClick={onAdd}>
 					<Plus aria-hidden="true" /> Add task
 				</Button>
 			</div>
@@ -84,6 +86,16 @@ export default function ProjectTasksTable({ projectName, tasks, members }) {
 										<TableHead scope="row">{task.title}</TableHead>
 										<TableCell className="text-muted-foreground">
 											{assignee?.name || "Unassigned"}
+										</TableCell>
+										<TableCell>
+											<Button
+												variant="ghost"
+												size="icon-sm"
+												onClick={() => onEdit(task)}
+												aria-label={`Edit ${task.title}`}
+											>
+												<Pencil />
+											</Button>
 										</TableCell>
 										<TableCell>
 											<Badge variant={task.priority}>{task.priority}</Badge>

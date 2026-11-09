@@ -34,7 +34,7 @@ export function isValidTask(task, projectIds, memberIds) {
 		typeof task.title === "string" &&
 		typeof task.description === "string" &&
 		projectIds.has(task.projectId) &&
-		memberIds.has(task.assigneeId) &&
+		(task.assigneeId === null || memberIds.has(task.assigneeId)) &&
 		VALID_PRIORITIES.includes(task.priority) &&
 		VALID_STATUSES.includes(task.status) &&
 		typeof task.dueDate === "string" &&

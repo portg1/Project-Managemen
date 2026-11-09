@@ -1,21 +1,22 @@
-import { useMemo, useState } from "react";
 import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+import ProjectDetailsTabs from "@/components/projects/ProjectDetailsTabs.jsx";
+import ProjectFormDialog from "@/components/projects/ProjectFormDialog.jsx";
+import TaskFormDialog from "@/components/tasks/TaskFormDialog.jsx";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import ProjectDetailsTabs from "@/components/projects/ProjectDetailsTabs.jsx";
-import ProjectFormDialog from "@/components/projects/ProjectFormDialog.jsx";
 import { toast } from "@/components/ui/sonner";
+import { getProjectProgress } from "@/data/seedData.js";
 import {
 	deleteProject,
 	updateProject,
 } from "@/services/projects/projectCrudService.js";
-import { getProjectProgress } from "@/data/seedData.js";
 import { useProjectStore } from "@/store/projectStore.js";
 import { selectProjectById, selectTasksForProject } from "@/store/selectors.js";
-import { useShallow } from "zustand/react/shallow";
 
 const PROJECT_STATUS_LABELS = {
 	planned: "Planned",
@@ -36,6 +37,7 @@ export default function ProjectDetailsPage() {
 	const navigate = useNavigate();
 	const [formOpen, setFormOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
+	const [taskDialog, setTaskDialog] = useState({ open: false, task: null });
 	const project = useProjectStore((state) => selectProjectById(state, id));
 	const tasks = useProjectStore(
 		useShallow((state) => selectTasksForProject(state, id)),
@@ -148,6 +150,14 @@ export default function ProjectDetailsPage() {
 				tasks={tasks}
 				members={members}
 				progress={progress}
+				onAddTask={() => setTaskDialog({ open: true, task: null })}
+				onEditTask={(task) => setTaskDialog({ open: true, task })}
+			/>
+			<TaskFormDialog
+				open={taskDialog.open}
+				onOpenChange={(open) => setTaskDialog((d) => ({ ...d, open }))}
+				task={taskDialog.task}
+				projectId={project.id}
 			/>
 			<ProjectFormDialog
 				open={formOpen}
