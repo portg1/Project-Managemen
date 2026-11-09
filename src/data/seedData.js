@@ -435,7 +435,7 @@ export function validateData(data = { projects, tasks, members }) {
 		data.tasks.every(
 			(item) =>
 				projectIds.has(item.projectId) &&
-				memberIds.has(item.assigneeId) &&
+				(item.assigneeId === null || memberIds.has(item.assigneeId)) &&
 				TASK_STATUSES.includes(item.status) &&
 				PRIORITIES.includes(item.priority),
 		) &&

@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
+import ProjectTasksTable from "@/components/projects/ProjectTasksTable.jsx";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import ProjectTasksTable from "@/components/projects/ProjectTasksTable.jsx";
 
 const PROJECT_STATUS_LABELS = {
 	planned: "Planned",
@@ -24,6 +24,8 @@ export default function ProjectDetailsTabs({
 	tasks,
 	members,
 	progress,
+	onAddTask,
+	onEditTask,
 }) {
 	const [activeTab, setActiveTab] = useState("tasks");
 	const projectMembers = useMemo(
@@ -65,6 +67,8 @@ export default function ProjectDetailsTabs({
 						projectName={project.name}
 						tasks={tasks}
 						members={members}
+						onAdd={onAddTask}
+						onEdit={onEditTask}
 					/>
 				</CardContent>
 			)}
