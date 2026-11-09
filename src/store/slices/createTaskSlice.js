@@ -42,15 +42,25 @@ export const createTaskSlice = (set, get) => ({
 	},
 
 	updateTaskStatus: (taskId, status) => {
+		const current = get().tasks.find((task) => task.id === taskId);
 		if (
 			!VALID_STATUSES.includes(status) ||
-			!get().tasks.some((task) => task.id === taskId)
+			!current ||
+			current.status === status
 		)
 			return false;
+		const activity = {
+			id: crypto.randomUUID(),
+			taskId,
+			previousStatus: current.status,
+			newStatus: status,
+			timestamp: new Date().toISOString(),
+		};
 		set((state) => ({
 			tasks: state.tasks.map((task) =>
 				task.id === taskId ? { ...task, status } : task,
 			),
+			activities: [...(state.activities || []), activity],
 		}));
 		return true;
 	},

@@ -12,6 +12,7 @@ export const useProjectStore = create(
 	persist(
 		(set, get, api) => ({
 			...initialData,
+			activities: [],
 			hasHydrated: false,
 
 			setHasHydrated: (hasHydrated) => set({ hasHydrated }),
@@ -26,9 +27,16 @@ export const useProjectStore = create(
 				projects: state.projects,
 				tasks: state.tasks,
 				members: state.members,
+				activities: state.activities,
 			}),
 			merge: (persistedState, currentState) => {
-				const candidate = { ...currentState, ...persistedState };
+				const candidate = {
+					...currentState,
+					...persistedState,
+					activities: Array.isArray(persistedState?.activities)
+						? persistedState.activities
+						: [],
+				};
 				return isValidStoreState(candidate) ? candidate : currentState;
 			},
 			onRehydrateStorage: () => (state) => {
