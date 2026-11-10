@@ -6,6 +6,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	DUE_DATE_FILTERS,
+	TASK_PRIORITIES,
+	TASK_STATUSES,
+} from "@/services/tasks/taskSearchService.js";
 export default function FilterDropdown({
 	filters,
 	onChange,
@@ -22,11 +27,7 @@ export default function FilterDropdown({
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem value="all">All statuses</SelectItem>
-					{[
-						["todo", "To Do"],
-						["in_progress", "In Progress"],
-						["done", "Done"],
-					].map(([v, l]) => (
+					{Object.entries(TASK_STATUSES).map(([v, l]) => (
 						<SelectItem key={v} value={v}>
 							{l}
 						</SelectItem>
@@ -39,9 +40,22 @@ export default function FilterDropdown({
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem value="all">All priorities</SelectItem>
-					{["Low", "Medium", "High"].map((v) => (
+					{Object.keys(TASK_PRIORITIES).map((v) => (
 						<SelectItem key={v} value={v}>
 							{v}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
+			<Select value={filters.dueDate || "all"} onValueChange={set("dueDate")}>
+				<SelectTrigger>
+					<SelectValue placeholder="Due date" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectItem value="all">All due dates</SelectItem>
+					{Object.entries(DUE_DATE_FILTERS).map(([v, l]) => (
+						<SelectItem key={v} value={v}>
+							{l}
 						</SelectItem>
 					))}
 				</SelectContent>
@@ -83,7 +97,13 @@ export default function FilterDropdown({
 				type="button"
 				variant="ghost"
 				onClick={() =>
-					onChange({ status: "", priority: "", assigneeId: "", projectId: "" })
+					onChange({
+						status: "",
+						priority: "",
+						assigneeId: "",
+						projectId: "",
+						dueDate: "",
+					})
 				}
 			>
 				Reset

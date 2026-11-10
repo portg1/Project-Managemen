@@ -1,17 +1,17 @@
 import { X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { searchTasks } from "@/services/tasks/taskSearchService.js";
 
-export default function TaskSearch({ tasks, value, onChange, onResults }) {
+export default function TaskSearch({ value, onChange }) {
+	const [draft, setDraft] = useState(value);
 	useEffect(() => {
-		onResults(searchTasks(tasks, value));
-	}, [tasks, value, onResults]);
+		const timeout = setTimeout(() => onChange(draft), 300);
+		return () => clearTimeout(timeout);
+	}, [draft, onChange]);
 
 	const handleChange = (nextValue) => {
-		onChange(nextValue);
-		onResults(searchTasks(tasks, nextValue));
+		setDraft(nextValue);
 	};
 	return (
 		<div className="relative flex-1">
@@ -20,7 +20,7 @@ export default function TaskSearch({ tasks, value, onChange, onResults }) {
 			</label>
 			<Input
 				id="task-search"
-				value={value}
+				value={draft}
 				onChange={(e) => handleChange(e.target.value)}
 				placeholder="Search by title or description"
 			/>
