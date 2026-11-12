@@ -40,11 +40,24 @@ state.
 | `jobTitle` | string | Member's role on the team. |
 | `avatar`   | string | Initials or an avatar URL. |
 
+## Subtask
+
+| Property    | Type                          | Description                            |
+| ----------- | ----------------------------- | -------------------------------------- |
+| `id`        | string                        | Unique subtask identifier.             |
+| `taskId`    | string                        | ID of the parent task.                 |
+| `title`     | string                        | Concise subtask title.                 |
+| `status`    | `todo \| in_progress \| done` | Current workflow state.                |
+| `createdAt` | string                        | Creation timestamp in ISO 8601 format. |
+
 ## Relationships and conventions
 
 - A task belongs to exactly one project through `projectId` and is assigned to
   exactly one member through `assigneeId`. Projects and members do not embed
   copies of their tasks.
+- A task has a one-to-many relationship with subtasks: one task can have
+  multiple subtasks, and each subtask belongs to exactly one task through
+  `taskId`. Tasks do not embed copies of their subtasks.
 - `todo` means work has not started, `in_progress` means work is underway, and
   `done` means the task is complete. Priority is ordered from `Low` to `High`.
 - Date-only values are local calendar dates in `YYYY-MM-DD`; timestamps are ISO

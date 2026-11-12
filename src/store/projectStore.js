@@ -26,13 +26,21 @@ export const useProjectStore = create(
 			partialize: (state) => ({
 				projects: state.projects,
 				tasks: state.tasks,
+				subtasks: state.subtasks,
 				members: state.members,
 				activities: state.activities,
 			}),
 			merge: (persistedState, currentState) => {
+				const hasPersistedState =
+					persistedState !== null && typeof persistedState === "object";
 				const candidate = {
 					...currentState,
 					...persistedState,
+					subtasks: hasPersistedState
+						? Array.isArray(persistedState.subtasks)
+							? persistedState.subtasks
+							: []
+						: currentState.subtasks,
 					activities: Array.isArray(persistedState?.activities)
 						? persistedState.activities
 						: [],

@@ -27,10 +27,20 @@ export const createProjectSlice = (set, get) => ({
 	deleteProject: (projectId) => {
 		if (!get().projects.some((project) => project.id === projectId))
 			return false;
-		set((state) => ({
-			projects: state.projects.filter((project) => project.id !== projectId),
-			tasks: state.tasks.filter((task) => task.projectId !== projectId),
-		}));
+		set((state) => {
+			const deletedTaskIds = new Set(
+				state.tasks
+					.filter((task) => task.projectId === projectId)
+					.map((task) => task.id),
+			);
+			return {
+				projects: state.projects.filter((project) => project.id !== projectId),
+				tasks: state.tasks.filter((task) => task.projectId !== projectId),
+				subtasks: state.subtasks.filter(
+					(subtask) => !deletedTaskIds.has(subtask.taskId),
+				),
+			};
+		});
 		return true;
 	},
 });

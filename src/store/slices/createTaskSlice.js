@@ -37,6 +37,7 @@ export const createTaskSlice = (set, get) => ({
 		if (!get().tasks.some((task) => task.id === taskId)) return false;
 		set((state) => ({
 			tasks: state.tasks.filter((task) => task.id !== taskId),
+			subtasks: state.subtasks.filter((subtask) => subtask.taskId !== taskId),
 		}));
 		return true;
 	},

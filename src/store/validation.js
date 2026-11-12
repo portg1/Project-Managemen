@@ -42,11 +42,23 @@ export function isValidTask(task, projectIds, memberIds) {
 	);
 }
 
+export function isValidSubtask(subtask, taskIds) {
+	return (
+		isObject(subtask) &&
+		typeof subtask.id === "string" &&
+		taskIds.has(subtask.taskId) &&
+		typeof subtask.title === "string" &&
+		VALID_STATUSES.includes(subtask.status) &&
+		typeof subtask.createdAt === "string"
+	);
+}
+
 export function isValidStoreState(value) {
 	if (
 		!isObject(value) ||
 		!hasUniqueId(value.projects) ||
 		!hasUniqueId(value.tasks) ||
+		!hasUniqueId(value.subtasks) ||
 		!hasUniqueId(value.members) ||
 		!value.projects.every(isValidProject)
 	) {
@@ -55,8 +67,10 @@ export function isValidStoreState(value) {
 
 	const projectIds = new Set(value.projects.map((project) => project.id));
 	const memberIds = new Set(value.members.map((member) => member.id));
+	const taskIds = new Set(value.tasks.map((task) => task.id));
 	return (
 		value.tasks.every((task) => isValidTask(task, projectIds, memberIds)) &&
+		value.subtasks.every((subtask) => isValidSubtask(subtask, taskIds)) &&
 		validateData(value)
 	);
 }

@@ -412,6 +412,122 @@ export const tasks = [
 	),
 ];
 
+const subtask = (id, taskId, title, status, createdDaysAgo) => ({
+	id,
+	taskId,
+	title,
+	status,
+	createdAt: createdAt(createdDaysAgo),
+});
+
+export const subtasks = [
+	subtask(
+		"subtask-1",
+		"task-1",
+		"List onboarding steps for new customers",
+		"done",
+		1,
+	),
+	subtask(
+		"subtask-2",
+		"task-1",
+		"Document edge cases for failed verification",
+		"in_progress",
+		1,
+	),
+	subtask(
+		"subtask-3",
+		"task-2",
+		"Sketch biometric sign-in states",
+		"done",
+		2,
+	),
+	subtask(
+		"subtask-4",
+		"task-2",
+		"Prototype fallback authentication flow",
+		"todo",
+		2,
+	),
+	subtask(
+		"subtask-5",
+		"task-3",
+		"Review token expiration requirements",
+		"in_progress",
+		3,
+	),
+	subtask(
+		"subtask-6",
+		"task-6",
+		"Inventory shared form components",
+		"done",
+		15,
+	),
+	subtask(
+		"subtask-7",
+		"task-6",
+		"Flag inconsistent button variants",
+		"done",
+		14,
+	),
+	subtask(
+		"subtask-8",
+		"task-8",
+		"Draft usage guidance for form fields",
+		"in_progress",
+		5,
+	),
+	subtask(
+		"subtask-9",
+		"task-9",
+		"Check primary button contrast",
+		"todo",
+		2,
+	),
+	subtask(
+		"subtask-10",
+		"task-16",
+		"Add retry limit configuration",
+		"done",
+		6,
+	),
+	subtask(
+		"subtask-11",
+		"task-16",
+		"Log exhausted retry attempts",
+		"in_progress",
+		5,
+	),
+	subtask(
+		"subtask-12",
+		"task-22",
+		"Rank article results by relevance",
+		"in_progress",
+		7,
+	),
+	subtask(
+		"subtask-13",
+		"task-22",
+		"Design the no-results state",
+		"todo",
+		6,
+	),
+	subtask(
+		"subtask-14",
+		"task-23",
+		"Validate required contact fields",
+		"done",
+		4,
+	),
+	subtask(
+		"subtask-15",
+		"task-23",
+		"Add inline error messages",
+		"in_progress",
+		3,
+	),
+];
+
 export function getProjectProgress(projectId, projectTasks) {
 	const relatedTasks = projectTasks.filter(
 		(item) => item.projectId === projectId,
@@ -423,15 +539,17 @@ export function getProjectProgress(projectId, projectTasks) {
 	return Math.round((completedTasks / relatedTasks.length) * 100);
 }
 
-export function validateData(data = { projects, tasks, members }) {
+export function validateData(data = { projects, tasks, members, subtasks }) {
 	const unique = (items) =>
 		new Set(items.map((item) => item.id)).size === items.length;
 	const projectIds = new Set(data.projects.map((project) => project.id));
 	const memberIds = new Set(data.members.map((member) => member.id));
+	const taskIds = new Set(data.tasks.map((task) => task.id));
 	return (
 		unique(data.projects) &&
 		unique(data.tasks) &&
 		unique(data.members) &&
+		unique(data.subtasks) &&
 		data.tasks.every(
 			(item) =>
 				projectIds.has(item.projectId) &&
@@ -439,12 +557,20 @@ export function validateData(data = { projects, tasks, members }) {
 				TASK_STATUSES.includes(item.status) &&
 				PRIORITIES.includes(item.priority),
 		) &&
+		data.subtasks.every(
+			(item) =>
+				typeof item.id === "string" &&
+				taskIds.has(item.taskId) &&
+				typeof item.title === "string" &&
+				TASK_STATUSES.includes(item.status) &&
+				typeof item.createdAt === "string",
+		) &&
 		data.projects.every((project) => PROJECT_STATUSES.includes(project.status))
 	);
 }
 
 export function getInitialData() {
-	return structuredClone({ projects, tasks, members });
+	return structuredClone({ projects, tasks, members, subtasks });
 }
 
 if (!validateData()) throw new Error("Invalid seed data");
