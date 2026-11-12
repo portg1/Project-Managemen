@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { getInitialData } from "../data/seedData.js";
 import { createProjectSlice } from "./slices/createProjectSlice.js";
+import { createSubtaskSlice } from "./slices/createSubtaskSlice.js";
 import { createTaskSlice } from "./slices/createTaskSlice.js";
 import { isValidStoreState } from "./validation.js";
 
@@ -18,6 +19,7 @@ export const useProjectStore = create(
 			setHasHydrated: (hasHydrated) => set({ hasHydrated }),
 			...createProjectSlice(set, get, api),
 			...createTaskSlice(set, get, api),
+			...createSubtaskSlice(set, get, api),
 
 			resetData: () => set({ ...getInitialData() }),
 		}),
